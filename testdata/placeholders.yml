@@ -1,0 +1,5 @@
+---
+yeet:
+  execution_role: arn:aws:iam::123456789012:role/placeholder
+  priority_calculator_func_arn:  arn:aws:lambda:ap-southeast-2:123456789012:function:placeholder
+  timeout_func_arn:  arn:aws:lambda:ap-southeast-2:123456789012:function:placeholder

@@ -1,0 +1,62 @@
+---
+aws:
+  application_load_balancers:
+    _defaults:
+      connection_draining_timeout: 300
+      container:
+        name: <($.name)>
+  ecs:
+    deployment:
+      timeout: PT15M
+    platform_version: "1.4.0"
+    task:
+      cpu: 256
+      execution_role: <($.yeet.execution_role)>
+      grace_period: 0
+      memory: 512
+  iam:
+    role: {}
+  network_load_balancers:
+    _defaults:
+      connection_draining_timeout: 300
+      dns:
+        _defaults:
+          weight: 100
+      protocol: TCP
+      scheme: internal
+containers:
+  _defaults:
+    ecr:
+      region: <($.aws.region)>
+    essential: true
+    logs:
+      datetime: '%Y-%m-%d %H:%M:%S'
+      region: <($.aws.region)>
+    ports: []
+    readonly: false
+    health_check:
+      interval: 30
+      retries: 3
+      start_period: 0
+      timeout: 5
+scaling:
+  desired: <($.scaling.initial_count)>
+  initial_count: <($.scaling.min)>
+  min: 1
+  max: 1
+  step_scaling:
+    _defaults:
+      adjustment_type: ChangeInCapacity
+      cooldown: 300
+monitoring:
+  cloudwatch:
+    alarms:
+      _defaults:
+        description: CloudWatch Alarm for <($.name)>
+        period: 60
+        times: 1
+        treat_missing_data: missing
+        when:
+          namespace: AWS/ECS
+          statistic: Average
+  logs: {}

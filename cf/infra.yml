@@ -1,0 +1,190 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Shared Infra for Yeet
+
+Resources:
+  ExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      Description: ECS Task Execution Role
+      Policies:
+        - PolicyName: execRolePolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ecr:BatchCheckLayerAvailability
+                  - ecr:GetDownloadUrlForLayer
+                  - ecr:BatchGetImage
+                Resource: "*"
+                Condition:
+                  StringEquals:
+                    aws:PrincipalOrgID: o-dvkqsk78du
+              - Effect: Allow
+                Action:
+                  - ecr:GetAuthorizationToken
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: !Sub "arn:*:logs:*:${AWS::AccountId}:log-group:*"
+
+  TimeoutRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: SignalCF
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              Effect: Allow
+              Action:
+                - cloudformation:SignalResource
+              Resource: "*"
+
+  TimeoutFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: "Sends CloudFormation success signal to provided CloudFormation Stack Wait Condition"
+      Code:
+        ZipFile: |
+          import cfnresponse
+          import boto3
+          def handler(event, context):
+            if event['RequestType'] in ['Create', 'Update']:
+              try:
+                c = boto3.client(service_name='cloudformation')
+                c.signal_resource(
+                  StackName=event['ResourceProperties']['StackId'],
+                  LogicalResourceId=event['ResourceProperties']['WaitCondition'],
+                  UniqueId="123",
+                  Status="SUCCESS")
+              except:
+                cfnresponse.send(event, context, cfnresponse.FAILED, {})
+                raise
+              else:
+                cfnresponse.send(event, context, cfnresponse.SUCCESS, {}, 'CustomResourcePhysicalID')
+            elif event['RequestType'] == 'Delete':
+              cfnresponse.send(event, context, cfnresponse.SUCCESS, {})
+      Handler: index.handler
+      Role: !GetAtt TimeoutRole.Arn
+      Runtime: "python3.7"
+
+  ListenerPriorityCalcRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: GetListenerRules
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              Effect: Allow
+              Action:
+                - elasticloadbalancing:DescribeRules
+              Resource: "*"
+
+  ListenerPriorityCalcFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: "Returns an available ALB Listener Rule Priority within a predefined range"
+      Code:
+        ZipFile: |
+          import boto3
+          import cfnresponse
+          import random
+          def handler(event, context):
+            if event['RequestType'] in ['Create', 'Update']:
+              try:
+                min=10000 # leave 1-9,999 available for rules which require specific ordering
+                max=40000 # leave 40,001-49,999 available for rules which require specific ordering
+                client = boto3.client(service_name='elbv2')
+                paginator = client.get_paginator('describe_rules')
+                page_iterator = paginator.paginate(ListenerArn=event['ResourceProperties']['ListenerArn'])
+                filtered_iterator = page_iterator.search("Rules[].Priority")
+                used = [priority for priority in filtered_iterator]
+                available = [priority for priority in range(min, max) if priority not in used]
+                responseData = {'priority': random.choice(available)}
+                cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData, "CustomResourcePhysicalID")
+              except:
+                cfnresponse.send(event, context, cfnresponse.FAILED, {})
+                raise
+            elif event['RequestType'] == 'Delete':
+              cfnresponse.send(event, context, cfnresponse.SUCCESS, {})
+      Handler: index.handler
+      Role: !GetAtt ListenerPriorityCalcRole.Arn
+      Runtime: "python3.7"
+
+  DefaultCluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      CapacityProviders:
+        - FARGATE
+      ClusterSettings:
+        - Name: containerInsights
+          Value: enabled
+
+  DefaultsParam:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: /yeet/defaults
+      Type: String
+      Value: !Sub |
+        ---
+        aws:
+          ecs:
+            cluster: ${DefaultCluster}
+          iam:
+              role:
+                policy_statements:
+                  cloudwatch:
+                    effect: allow
+                    action:
+                      - logs:CreateLogStream
+                      - logs:PutLogEvents
+                      - cloudwatch:PutMetricData
+                      - cloudwatch:GetMetricData
+                    resource:
+                      - "*"
+          region: ${AWS::Region}
+        containers:
+          _defaults:
+            ecr:
+              account: ${AWS::AccountId}
+              region: ${AWS::Region}
+        yeet:
+          execution_role: ${ExecutionRole.Arn}
+          priority_calculator_func_arn: ${ListenerPriorityCalcFunction.Arn}
+          timeout_func_arn: ${TimeoutFunction.Arn}
+      Description: Yeet default configurations relevant to the whole account

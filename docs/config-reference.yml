@@ -1,0 +1,777 @@
+---
+aws.application_load_balancers[X].connection_draining_timeout:
+  default: 300
+  description: Passed to TargetGroupAttributes deregistration_delay.timeout_seconds
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticloadbalancingv2-targetgroup-targetgroupattribute.html
+  type: Integer
+aws.application_load_balancers[X].container.name:
+  default: <($.name)>
+  description: Container for ECS Service to register to ALB's Target Group
+  type: string
+aws.application_load_balancers[X].container.port:
+  default: unset
+  description: Port for ECS Service to register to ALB's Target Group
+  type: Integer
+aws.application_load_balancers[X].health_check.healthy_threshold:
+  default: For target groups with a protocol of HTTP or HTTPS, the default is 5. For target groups with a protocol of TCP, TLS, or GENEVE, the default is 3.
+  description: The number of consecutive health checks successes required before considering an unhealthy target healthy.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-healthythresholdcount
+  type: Integer
+aws.application_load_balancers[X].health_check.interval:
+  default: If the target group protocol is TCP, TLS, UDP, or TCP_UDP, the supported values are 10 and 30 seconds. If the target group protocol is HTTP or HTTPS, the default is 30 seconds.
+  description: The approximate amount of time, in seconds, between health checks of an individual target.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-healthcheckintervalseconds
+  type: Integer
+aws.application_load_balancers[X].health_check.path:
+  default: /
+  description: The destination for health checks on the targets.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-healthcheckpath
+  type: String
+aws.application_load_balancers[X].health_check.port:
+  default: <($.aws.application_load_balancer[X].container.port)>
+  description: The port the load balancer uses when performing health checks on targets.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-healthcheckport
+  type: String
+aws.application_load_balancers[X].health_check.protocol:
+  default: HTTP
+  description: The protocol the load balancer uses when performing health checks on targets. 
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-healthcheckprotocol
+  type: String
+aws.application_load_balancers[X].health_check.timeout:
+  default: For target groups with a protocol of HTTP, HTTPS, or GENEVE, the default is 5 seconds. For target groups with a protocol of TCP or TLS, this value must be 6 seconds for HTTP health checks and 10 seconds for TCP and HTTPS health checks.
+  description: The amount of time, in seconds, during which no response from a target means a failed health check.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-healthchecktimeoutseconds
+  type: Integer
+aws.application_load_balancers[X].health_check.unhealthy_threshold:
+  default: If the target group protocol is HTTP or HTTPS, the default is 2. If the target group protocol is TCP or TLS, this value must be the same as the healthy threshold count.
+  description: The number of consecutive health check failures required before considering a target unhealthy.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-unhealthythresholdcount
+  type: Integer
+aws.application_load_balancers[X].listener_rules[X].listener_arn:
+  default: unset
+  description: The ARN of the Listener which will handle traffic for the application.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-listenerrule.html#cfn-elasticloadbalancingv2-listenerrule-listenerarn
+  type: String
+aws.application_load_balancers[X].listener_rules[X].hostname:
+  default: unset
+  description: The hostname for which requests should be sent to the application
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticloadbalancingv2-listenerrule-rulecondition.html#cfn-elasticloadbalancingv2-listenerrule-rulecondition-values
+  type: String
+aws.application_load_balancers[X].listener_rules[X].path:
+  default: unset
+  description: The path for which requests should be sent to the application
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticloadbalancingv2-listenerrule-rulecondition.html#cfn-elasticloadbalancingv2-listenerrule-rulecondition-values
+  type: String
+aws.application_load_balancers[X].listener_rules[X].priority:
+  default: unset
+  description: A statically set rule priority. If unset a random priority will be chosen. Can be statically chosen to ensure certain ordering of Listener Rules.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-listenerrule.html#cfn-elasticloadbalancingv2-listenerrule-priority
+  type: Integer
+aws.application_load_balancers[X].protocol:
+  default: unset
+  description: The protocol to use for routing traffic to the targets.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-protocol
+  type: String
+aws.application_load_balancers[X].target_group:
+  default: unset
+  description: BYO Target Group to register Tasks to
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticloadbalancingv2-listenerrule-action.html#cfn-elasticloadbalancingv2-listenerrule-action-targetgrouparn
+  type: String
+aws.ecs.cluster:
+  default: unset
+  description: The short name or full Amazon Resource Name (ARN) of the cluster that you run your service on. If you do not specify a cluster, the default cluster is assumed. 
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-service.html#cfn-ecs-service-cluster
+  type: String
+aws.ecs.deployment.timeout:
+  default: PT15M
+  description: The length of time, expressed using ISO8601 during format, that the ECS Deployment should be allowed to run for before forcing a rollback.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-creationpolicy.html#cfn-attributes-creationpolicy-resourcesignal-timeout
+  type: String
+aws.ecs.name:
+  default: unset
+  description: The name of your service. Up to 255 letters (uppercase and lowercase), numbers, underscores, and hyphens are allowed. Service names must be unique within a cluster, but you can have similarly named services in multiple clusters within a Region or across multiple Regions. 
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-service.html#cfn-ecs-service-servicename
+  type: String
+aws.ecs.platform_version:
+  default: "1.4.0"
+  description: The ECS/Fargate Platform Version to use when running the defined Tasks.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-service.html#cfn-ecs-service-platformversion
+  type: String
+aws.ecs.task.assign_public_ip:
+  default: unset
+  description: Whether the task's elastic network interface receives a public IP address. The default value is DISABLED. Permitted values are "ENABLED" or "DISABLED".
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-service-awsvpcconfiguration.html#cfn-ecs-service-awsvpcconfiguration-assignpublicip
+  type: String
+aws.ecs.task.cpu:
+  default: 256
+  description: The number of cpu units used by the task.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-taskdefinition.html#cfn-ecs-taskdefinition-cpu
+  type: String
+aws.ecs.task.execution_role:
+  default: <($.yeet.execution_role)>
+  description: The Amazon Resource Name (ARN) of the task execution role that grants the Amazon ECS container agent permission to make AWS API calls on your behalf.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-taskdefinition.html#cfn-ecs-taskdefinition-executionrolearn
+  type: String
+aws.ecs.task.grace_period:
+  default: 0
+  description: The period of time, in seconds, that the Amazon ECS service scheduler ignores unhealthy Elastic Load Balancing target health checks after a task has first started.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-service.html#cfn-ecs-service-healthcheckgraceperiodseconds
+  type: Integer
+aws.ecs.task.ingress[X].allow_ingress_from:
+  default: unset
+  description: The IPv4 address range, in CIDR format, to allow network ingress into the ECS Task.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group-rule-1.html#cfn-ec2-security-group-rule-cidrip
+  type: String
+aws.ecs.task.ingress[X].description:
+  default: unset
+  description: A description for your security group rule.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group-rule-1.html#cfn-ec2-security-group-rule-description
+  type: String
+aws.ecs.task.ingress[X].ports:
+  default: unset
+  description: The TCP/UDP port number/range to allow. If specifying ICMP this value must be -1. Ranges can be specified in the format `start-end`, e.g. 1025-65535
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group-rule.html#cfn-ec2-security-group-rule-fromport
+  type: Integer
+aws.ecs.task.ingress[X].port:
+  default: unset
+  description: Deprecated in favour of aws.ecs.task.ingress[X].ports. A single TCP/UDP port number to allow.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group-rule.html#cfn-ec2-security-group-rule-fromport
+  type: Integer
+aws.ecs.task.ingress[X].protocol:
+  default: unset
+  description: The IP protocol name (tcp, udp, icmp, icmpv6) or number.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group-rule-1.html#cfn-ec2-security-group-rule-ipprotocol
+  type: String
+aws.ecs.task.egress[X].allow_egress_to:
+  default: unset
+  description: The IPv4 address range, in CIDR format, to allow network egress from the ECS Task.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group-rule.html#cfn-ec2-security-group-rule-cidrip
+  type: String
+aws.ecs.task.egress[X].description:
+  default: unset
+  description: A description for your security group rule.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group-rule.html#cfn-ec2-security-group-rule-description
+  type: String
+aws.ecs.task.egress[X].ports:
+  default: unset
+  description: The TCP/UDP port number/range to allow. If specifying ICMP this value must be -1. Ranges can be specified in the format `start-end`, e.g. 1025-65535
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group-rule.html#cfn-ec2-security-group-rule-fromport
+  type: Integer
+aws.ecs.task.egress[X].port:
+  default: unset
+  description: Deprecated in favour of aws.ecs.task.egress[X].ports. A single TCP/UDP port number to allow.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group-rule.html#cfn-ec2-security-group-rule-fromport
+  type: Integer
+aws.ecs.task.egress[X].protocol:
+  default: unset
+  description: The IP protocol name (tcp, udp, icmp, icmpv6) or number.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group-rule.html#cfn-ec2-security-group-rule-ipprotocol
+  type: String
+aws.ecs.task.memory:
+  default: 512
+  description: The amount (in MiB) of memory used by the task.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-taskdefinition.html#cfn-ecs-taskdefinition-memory
+  type: String
+aws.ecs.task.security_groups:
+  default: unset
+  description: The IDs of the security groups associated with the task or service.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-service-awsvpcconfiguration.html#cfn-ecs-service-awsvpcconfiguration-securitygroups
+  type: List of String
+aws.ecs.task.subnets:
+  default: unset
+  description: The IDs of the subnets associated with the task or service. There's a limit of 16 subnets that can be specified per AwsVpcConfiguration.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-service-awsvpcconfiguration.html#cfn-ecs-service-awsvpcconfiguration-subnets
+  type: List of String
+aws.iam.role_arn:
+  default: unset
+  description: The short name or full Amazon Resource Name (ARN) of the AWS Identity and Access Management role that grants containers in the task permission to call AWS APIs on your behalf. If not set, an IAM Role will be created as per <($.aws.iam.role)>.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-taskdefinition.html#cfn-ecs-taskdefinition-taskrolearn
+  type: String
+aws.iam.role.managed_policies:
+  default: []
+  description: A list of Amazon Resource Names (ARNs) of the IAM managed policies that you want to attach to the role.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html#cfn-iam-role-managepolicyarns
+  type: List of String
+aws.iam.role.path:
+  default: /
+  description: The path to where the role should be created.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html#cfn-iam-role-path
+  type: String
+aws.iam.role.policy_statements[X].action:
+  default: unset
+  description: The specific action(s) that will be allowed or denied. Wildcards can be used (e.g. s3:Get*).
+  references:
+    - https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_action.html
+  type: List of String
+aws.iam.role.policy_statements[X].effect:
+  default: unset
+  description: Specifies whether the statement results in an allow or an explicit deny. Permitted values are "Allow" or "Deny".
+  references:
+    - https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_effect.html
+  type: String
+aws.iam.role.policy_statements[X].resource:
+  default: unset
+  description: Specifies the object(s) that the statement covers.
+  references:
+    - https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_resource.html
+  type: List of String
+aws.network_load_balancers[X].access_logging.bucket:
+  default:
+  description:
+  references:
+  type:
+aws.network_load_balancers[X].access_logging.prefix:
+  default:
+  description:
+  references:
+  type:
+aws.network_load_balancers[X].connection_draining_timeout:
+  default: 300
+  description: Passed to TargetGroupAttributes deregistration_delay.timeout_seconds
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticloadbalancingv2-targetgroup-targetgroupattribute.html
+  type: Integer
+aws.network_load_balancers[X].container.name:
+  default: <($.name)>
+  description: Container for ECS Service to register to NLB's Target Group
+  type: string
+aws.network_load_balancers[X].container.port:
+  default: unset
+  description: Port for ECS Service to register to NLB's Target Group
+  type: Integer
+aws.network_load_balancers[X].cross_zone:
+  default: unset
+  description: Indicates whether cross-zone load balancing is enabled. The possible values are true and false. The default is false.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticloadbalancingv2-loadbalancer-loadbalancerattributes.html#aws-properties-elasticloadbalancingv2-loadbalancer-loadbalancerattributes-properties
+  type: String
+aws.network_load_balancers[X].dns[X].weight:
+  default: 100
+  description: Among resource record sets that have the same combination of DNS name and type, a value that determines the proportion of DNS queries that Amazon Route 53 responds to using the current resource record set.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-recordset.html#cfn-route53-recordset-weight
+  type: Integer
+aws.network_load_balancers[X].dns[X].zone:
+  default: unset
+  description: The name of the hosted zone that you want to create records in. Must include a trailing dot. Use zone_id if there are multiple hosted zones with the same name in the account.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-recordset.html#cfn-route53-recordset-hostedzonename
+  type: String
+aws.network_load_balancers[X].dns[X].zone_id:
+  default: unset
+  description: The ID of the hosted zone that you want to create records in.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-recordset.html#cfn-route53-recordset-hostedzoneid
+  type: String
+aws.network_load_balancers[X].health_check.healthy_threshold:
+  default: For target groups with a protocol of HTTP or HTTPS, the default is 5. For target groups with a protocol of TCP, TLS, or GENEVE, the default is 3.
+  description: The number of consecutive health checks successes required before considering an unhealthy target healthy.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-healthythresholdcount
+  type: Integer
+aws.network_load_balancers[X].health_check.interval:
+  default: If the target group protocol is TCP, TLS, UDP, or TCP_UDP, the supported values are 10 and 30 seconds. If the target group protocol is HTTP or HTTPS, the default is 30 seconds.
+  description: The approximate amount of time, in seconds, between health checks of an individual target.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-healthcheckintervalseconds
+  type: Integer
+aws.network_load_balancers[X].health_check.path:
+  default: /
+  description: The destination for HTTP/HTTPS/HTTP1/HTTP2/GRPC health checks on the targets.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-healthcheckpath
+  type: String
+aws.network_load_balancers[X].health_check.port:
+  default: <($.aws.network_load_balancers[X].container.port)>
+  description: The port the load balancer uses when performing health checks on targets.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-healthcheckport
+  type: String
+aws.network_load_balancers[X].health_check.protocol:
+  default: TCP
+  description: The protocol the load balancer uses when performing health checks on targets. 
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-healthcheckprotocol
+  type: String
+aws.network_load_balancers[X].health_check.timeout:
+  default: For target groups with a protocol of HTTP, HTTPS, or GENEVE, the default is 5 seconds. For target groups with a protocol of TCP or TLS, this value must be 6 seconds for HTTP health checks and 10 seconds for TCP and HTTPS health checks.
+  description: The amount of time, in seconds, during which no response from a target means a failed health check.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-healthchecktimeoutseconds
+  type: Integer
+aws.network_load_balancers[X].health_check.unhealthy_threshold:
+  default: If the target group protocol is HTTP or HTTPS, the default is 2. If the target group protocol is TCP or TLS, this value must be the same as the healthy threshold count.
+  description: The number of consecutive health check failures required before considering a target unhealthy.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-unhealthythresholdcount
+  type: Integer
+aws.network_load_balancers[X].port:
+  default: unset
+  description: The port on which the NLB is listening.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-listener.html#cfn-elasticloadbalancingv2-listener-port
+  type: Integer
+aws.network_load_balancers[X].protocol:
+  default: TCP
+  description: The protocol for connections from clients to the load balancer. For Network Load Balancers, the supported protocols are TCP, TLS, UDP, and TCP_UDP. Also the protocol to use for routing traffic to the targets.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-listener.html#cfn-elasticloadbalancingv2-listener-protocol
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-protocol
+  type: String
+aws.network_load_balancers[X].proxy_protocol_v2:
+  default: unset
+  description: Indicates whether Proxy Protocol version 2 is enabled. The value is true or false. The default is false.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticloadbalancingv2-targetgroup-targetgroupattribute.html
+  type: Boolean
+aws.network_load_balancers[X].scheme:
+  default: internal
+  description: The nodes of an Internet-facing load balancer have public IP addresses. The nodes of an internal load balancer have only private IP addresses. Valid values are "internal" or "internet-facing"
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html#cfn-elasticloadbalancingv2-loadbalancer-scheme
+  type: String
+aws.network_load_balancers[X].stickiness:
+  default: unset
+  description: The type of sticky sessions. The possible values are "source_ip" for Network Load Balancers.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticloadbalancingv2-targetgroup-targetgroupattribute.html
+  type: String
+aws.network_load_balancers[X].subnets:
+  default: unset
+  description: The IDs of the subnets to place the NLB in. You can specify only one subnet per Availability Zone. You can specify subnets from one or more Availability Zones.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html#cfn-elasticloadbalancingv2-loadbalancer-subnets
+  type: List of String
+aws.network_load_balancers[X].target_group:
+  default: unset
+  description: BYO Target Group to register Tasks to. If a value is specified then Yeet will not deploy or manage another NLB, Listener, or Route 53 entry and only the `aws.network_load_balancers[X].container` config items are required.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-service-loadbalancer.html#cfn-ecs-service-loadbalancer-targetgrouparn
+  type: String
+aws.region:
+  default: value of region flag or environment variables AWS_REGION or AWS_DEFAULT_REGION
+  description: The AWS region used for various components by default (e.g. ECR and CloudWatch Logs)
+  type: String
+aws.service_discovery.cloudmap.container:
+  default: unset
+  description: The container name value to be used for your service discovery service.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-service-serviceregistry.html#cfn-ecs-service-serviceregistry-containername
+  type: String
+aws.service_discovery.cloudmap.namespace:
+  default: unset
+  description: The ID of the namespace where the service should be created
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-servicediscovery-service.html#cfn-servicediscovery-service-namespaceid
+  type: String
+aws.service_discovery.cloudmap.service:
+  default: unset
+  description: BYO Cloud Map Service. The Amazon Resource Name (ARN) of the service registry. The currently supported service registry is AWS Cloud Map.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-service-serviceregistry.html#cfn-ecs-service-serviceregistry-registryarn
+  type: String
+aws.vpc:
+  default: unset
+  description: The identifier of the virtual private cloud (VPC) where the resources should be created.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-vpcid
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group.html#cfn-ec2-securitygroup-vpcid
+  type: String
+containers[X].depends_on[].condition:
+  default: START
+  description: The dependency condition of the container. Permitted values are "START" (container is started), "COMPLETE" (container has exited, may not be successful/non-zero exit code, can't be used on essentials containers), "SUCCESS" (container has exited with a zero exit code, can't be used on essential containers), and "HEALTHY" (container is running and has passed its Docker health check).
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-containerdependency.html#cfn-ecs-taskdefinition-containerdependency-condition
+  type: String
+containers[X].depends_on[].container:
+  default: unset
+  description: The name of the container
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-containerdependency.html#cfn-ecs-taskdefinition-containerdependency-containername
+  type: String
+containers[X].ecr.account:
+  default: ${AWS::AccountId}
+  description: The AWS account where the ECR repository resides
+  type: String
+containers[X].ecr.region:
+  default: <($.aws.region)>
+  description: The AWS region where the ECR repository resides
+  type: String
+containers[X].ecr.repository:
+  default: unset
+  description: The name of the ECR repository
+  type: String
+containers[X].ecr.tag:
+  default: unset
+  description: The image tag which should be run
+  type: String
+containers[X].environment:
+  default: {}
+  description: Map of environment variables to present to the container at runtime. The keys are the environment variable names with the values being the values assigned to the environment variables.
+  type: Map of Strings to Strings
+containers[X].essential:
+  default: true
+  description: If an essential container stops for any reason all containers within a Task are stopped. All Tasks must have at least one essential container.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-containerdefinitions.html#cfn-ecs-taskdefinition-containerdefinition-essential
+  type: Boolean
+containers[X].health_check:
+  default: unset
+  description: The container health check command and associated configuration parameters for the container. This parameter maps to the HEALTHCHECK parameter of docker run.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-healthcheck.html
+  type: Object
+containers[X].health_check.command:
+  default: unset
+  description: A string array representing the command that the container runs to determine if it is healthy. The string array must start with CMD to run the command arguments directly, or CMD-SHELL to run the command with the default shell of the container.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-healthcheck.html#cfn-ecs-taskdefinition-healthcheck-command
+  type: Slice of Strings
+containers[X].health_check.interval:
+  default: 30
+  description: The time period in seconds between each health check execution. You may specify between 5 and 300 seconds.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-healthcheck.html#cfn-ecs-taskdefinition-healthcheck-interval
+  type: Integer
+containers[X].health_check.retries:
+  default: 3
+  description: The number of times to retry a failed health check before the container is considered unhealthy. You may specify between 1 and 10 retries.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-healthcheck.html#cfn-ecs-taskdefinition-healthcheck-retries
+  type: Integer
+containers[X].health_check.start_period:
+  default: 0
+  description: The optional grace period to provide containers time to bootstrap before failed health checks count towards the maximum number of retries. You can specify between 0 and 300 seconds.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-healthcheck.html#cfn-ecs-taskdefinition-healthcheck-startperiod
+  type: Integer
+containers[X].health_check.timeout:
+  default: 5
+  description: The time period in seconds to wait for a health check to succeed before it is considered a failure. You may specify between 2 and 60 seconds.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-healthcheck.html#cfn-ecs-taskdefinition-healthcheck-timeout
+  type: Integer
+containers[X].image:
+  default: unset
+  description: The image used to start a container. This string is passed directly to the Docker daemon. By default, images in the Docker Hub registry are available. Other repositories are specified with either repository-url/image:tag or repository-url/image@digest. If not set the `ecr` configuration will be used to construct a container image string.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-containerdefinitions.html#cfn-ecs-taskdefinition-containerdefinition-image
+  type: String
+containers[X].logs.datetime:
+  default: '%Y-%m-%d %H:%M:%S'
+  description: This option defines a multiline start pattern in Python strftime format. A log message consists of a line that matches the pattern and any following lines that don’t match the pattern. Thus the matched line is the delimiter between log messages.
+  references:
+    - https://docs.aws.amazon.com/AmazonECS/latest/developerguide/using_awslogs.html#create_awslogs_logdriver_options
+  type: String
+containers[X].logs.group:
+  default: unset
+  description: BYO Log Group to send logs to. If one is not specified a Log Group will be dynamically created.
+  references:
+    - https://docs.aws.amazon.com/AmazonECS/latest/developerguide/using_awslogs.html#create_awslogs_logdriver_options
+  type: String
+containers[X].logs.prefix:
+  default: container name
+  description: Override the Log Group Stream Prefix for this container. If unspecified the container name will be used.
+  references:
+    - https://docs.aws.amazon.com/AmazonECS/latest/developerguide/using_awslogs.html#create_awslogs_logdriver_options
+  type: String
+containers[X].logs.region:
+  default: <($.aws.region)>
+  description: Specify the region that the BYO Log Group exists in. Cannot be used for the dynamically created log group.
+  references:
+    - https://docs.aws.amazon.com/AmazonECS/latest/developerguide/using_awslogs.html#create_awslogs_logdriver_options
+  type: String
+containers[X].ports[]:
+  default: []
+  description: List of ports to expose from the container. A list of maps where valid map keys are either "tcp" or "udp". Each map can contain at most 1 of each of the valid map keys.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-containerdefinitions.html#cfn-ecs-taskdefinition-containerdefinition-portmappings
+  type: List of Maps of Strings to Integers
+containers[X].readonly:
+  default: false
+  description: When this parameter is true, the container is given read-only access to its root file system.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-containerdefinitions.html#cfn-ecs-taskdefinition-containerdefinition-readonlyrootfilesystem
+  type: Boolean
+containers[X].ulimits:
+  default: {}
+  description: Contains a map of ulimits to be set for the container. Each ulimit must have a hard_limit and a soft_limit set. Allowed keys are "core", "cpu", "data", "fsize", "locks", "memlock", "msgqueue", "nice", "nofile", "nproc", "rss", "rtprio", "rttime", "sigpending", or "stack".
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-containerdefinitions-ulimit.html#cfn-ecs-taskdefinition-containerdefinition-ulimit-name
+  type: Map of ulimits
+containers[X].ulimits[X].hard_limit:
+  default: unset
+  description: The hard limit for the ulimit.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-containerdefinitions-ulimit.html#cfn-ecs-taskdefinition-containerdefinition-ulimit-hardlimit
+  type: Integer
+containers[X].ulimits[X].soft_limit:
+  default: unset
+  description: The soft limit for the ulimit.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-containerdefinitions-ulimit.html#cfn-ecs-taskdefinition-containerdefinition-ulimit-softlimit
+  type: Integer
+containers[X].volumes_from[].container:
+  default: unset
+  description: The name of another container within the same task definition to mount volumes from.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-containerdefinitions-volumesfrom.html#cfn-ecs-taskdefinition-containerdefinition-volumesfrom-sourcecontainer
+  type: String
+containers[X].volumes_from[].readonly:
+  default: false
+  description: If this value is true, the container has read-only access to the volume. If this value is false, then the container can write to the volume.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-containerdefinitions-volumesfrom.html#cfn-ecs-taskdefinition-containerdefinition-volumesfrom-readonly
+  type: Boolean
+monitoring.cloudwatch.alarms[X].description:
+  default: CloudWatch Alarm for <($.name)>
+  description: The description of the alarm.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-alarmdescription
+  type: String
+monitoring.cloudwatch.alarms[X].notify:
+  default: []
+  description: List of actions to execute when this alarm transitions into one of the alarm states listed in .notify_on. Each action is specified as an ARN.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-alarmactions
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-okactions
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-insufficientdataactions
+  type: List of String
+monitoring.cloudwatch.alarms[X].notify_on:
+  default: []
+  description: List of alarm states to trigger actions listed in .notify on. Allowed values are "alarm", "ok", and "insufficient_data".
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-alarmactions
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-okactions
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-insufficientdataactions
+  type: List of String
+monitoring.cloudwatch.alarms[X].period:
+  default: 60
+  description: The period, in seconds, over which the statistic is applied. Valid values are 10, 30, 60, and any multiple of 60.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-period
+  type: Integer
+monitoring.cloudwatch.alarms[X].times:
+  default: 1
+  description: The number of periods over which data is compared to the specified threshold. If you are setting an alarm that requires that a number of consecutive data points be breaching to trigger the alarm, this value specifies that number.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-evaluationperiods
+  type: Integer
+monitoring.cloudwatch.alarms[X].treat_missing_data:
+  default: missing
+  description: Sets how this alarm is to handle missing data points. Valid values are "breaching", "notBreaching", "ignore", and "missing".
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-treatmissingdata
+  type: String
+monitoring.cloudwatch.alarms[X].when.comparison:
+  default: unset
+  description: The arithmetic operation to use when comparing the specified statistic and threshold. The specified statistic value is used as the first operand. Valid values are "GreaterThanThreshold", "GreaterThanOrEqualToThreshold", "LessThanThreshold", or "LessThanOrEqualToThreshold"
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-comparisonoperator
+  type: String
+monitoring.cloudwatch.alarms[X].when.dimensions:
+  default: unset; when the namespace is "AWS/ECS" or "AWS/ContainerInsights" the namespaces default to the ClusterName and ServiceName.
+  description: The dimensions for the metric associated with the alarm. A map of Dimension names to their values.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-dimension
+  type: Map of String to String
+monitoring.cloudwatch.alarms[X].when.metric:
+  default: unset
+  description: The name of the metric associated with the alarm.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-metricname
+  type: String
+monitoring.cloudwatch.alarms[X].when.namespace:
+  default: AWS/ECS
+  description: The namespace of the metric associated with the alarm.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-namespace
+    - https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/aws-services-cloudwatch-metrics.html
+  type: String
+monitoring.cloudwatch.alarms[X].when.statistic:
+  default: Average
+  description: The statistic for the metric associated with the alarm. Valid values are "Average", "Maximum", "Minimum", "SampleCount", or "Sum"
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-statistic
+  type: String
+monitoring.cloudwatch.alarms[X].when.threshold:
+  default: unset
+  description: The value to compare with the specified statistic.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-threshold
+  type: Double
+monitoring.logs.retention:
+  default: unset
+  description: The number of days to retain the log events in the specified log group. Possible values are 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, and 3653.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-loggroup.html#cfn-logs-loggroup-retentionindays
+  type: Integer
+monitoring.logs.s3.bucket:
+  default: unset
+  description: The S3 bucket ARN to send CloudWatch Logs to via a Subscription Filter and Kinesis Firehose Delivery Stream (all setup by Yeet).
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kinesisfirehose-deliverystream-s3destinationconfiguration.html#cfn-kinesisfirehose-deliverystream-s3destinationconfiguration-bucketarn
+  type: String
+monitoring.logs.s3.kms:
+  default: unset
+  description: The ARN of the KMS encryption key that Amazon S3 uses to encrypt data delivered by the Kinesis Data Firehose stream. The key must belong to the same region as the destination S3 bucket.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kinesisfirehose-deliverystream-kmsencryptionconfig.html#cfn-kinesisfirehose-deliverystream-kmsencryptionconfig-awskmskeyarn
+  type: String
+monitoring.logs.s3.prefix:
+  default: unset
+  description: A prefix that Kinesis Data Firehose adds to the files that it delivers to the Amazon S3 bucket. The prefix helps you identify the files that Kinesis Data Firehose delivered.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kinesisfirehose-deliverystream-s3destinationconfiguration.html#cfn-kinesisfirehose-deliverystream-s3destinationconfiguration-prefix
+  type: String
+monitoring.logs.s3.role:
+  default: unset
+  description: The ARN of an AWS IAM Role that grants Kinesis Data Firehose access to your Amazon S3 bucket and AWS KMS (if used).
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kinesisfirehose-deliverystream-s3destinationconfiguration.html#cfn-kinesisfirehose-deliverystream-s3destinationconfiguration-rolearn
+  type: String
+name:
+  default: unset
+  description: The name of the CloudFormation Stack to be deployed by Yeet. Typically the same as your application/service/system name.
+  type: String
+scaling.desired:
+  default: <($.scaling.initial_count)>
+  description: The number of instantiations of the specified task definition to place and keep running on your cluster.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-service.html#cfn-ecs-service-desiredcount
+  type: Integer
+scaling.initial_count:
+  default: <($.scaling.min)>
+  description: Currently unused (aside from as the default value of <($.scaling.desired)>). Future versions of Yeet may differentiate because new and update deployments. (e.g. a new deployment can use <($.scaling.initial_count)> but an update deployment will inspect the current number of running Tasks for the value of <($.scaling.desired)>).
+  type: Integer
+scaling.max:
+  default: 1
+  description: The maximum number of Tasks you wish to scale up to.
+  references:
+    -  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-applicationautoscaling-scalabletarget.html#cfn-applicationautoscaling-scalabletarget-maxcapacity
+  type: Integer
+scaling.min:
+  default: 1
+  description: The minimum number of Tasks you wish to have running at any time.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-applicationautoscaling-scalabletarget.html#cfn-applicationautoscaling-scalabletarget-mincapacity
+  type: Integer
+scaling.step_scaling[X].adjustment:
+  default: unset
+  description: The amount by which to scale. The adjustment is based on the value that you specified in `adjustment_type` property. A positive value adds to the current capacity and a negative number subtracts from the current capacity.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-applicationautoscaling-scalingpolicy-stepscalingpolicyconfiguration-stepadjustment.html#cfn-applicationautoscaling-scalingpolicy-stepscalingpolicyconfiguration-stepadjustment-scalingadjustment
+  type: Integer
+scaling.step_scaling[X].adjustment_type:
+  default: ChangeInCapacity
+  description: Specifies whether the `adjustment` value is an absolutely number or a percentage of the current capacity. Permitted values are "ChangeInCapacity", "ExactCapacity", "PercentChangeInCapacity".
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-applicationautoscaling-scalingpolicy-stepscalingpolicyconfiguration.html#cfn-applicationautoscaling-scalingpolicy-stepscalingpolicyconfiguration-adjustmenttype
+  type: String
+scaling.step_scaling[X].cooldown:
+  default: 300
+  description: The amount of time, in seconds, to wait for a previous scaling activity to take effect.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-applicationautoscaling-scalingpolicy-stepscalingpolicyconfiguration.html#cfn-applicationautoscaling-scalingpolicy-stepscalingpolicyconfiguration-cooldown
+  type: Integer
+scaling.step_scaling[X].description:
+  default: unset
+  description: The description for the CloudWatch Alarm associated with the scaling policy.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-alarmdescription
+  type: String
+scaling.step_scaling[X].period:
+  default: 60
+  description: The period, in seconds, over which the statistic is applied. Valid values are 10, 30, 60, and any multiple of 60.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-period
+  type: Integer
+scaling.step_scaling[X].times:
+  default: 1
+  description: The number of periods over which data is compared to the specified threshold. If you are setting a scaling policy that requires that a number of consecutive data points be breaching to trigger the scaling activity, this value specifies that number.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-evaluationperiods
+  type: Integer
+scaling.step_scaling[X].when.comparison:
+  default: unset
+  description: The arithmetic operation to use when comparing the specified statistic and threshold. The specified statistic value is used as the first operand. Valid values are "GreaterThanThreshold", "GreaterThanOrEqualToThreshold", "LessThanThreshold", or "LessThanOrEqualToThreshold"
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-comparisonoperator
+  type: String
+scaling.step_scaling[X].when.dimensions:
+  default: unset; when the namespace is "AWS/ECS" or "AWS/ContainerInsights" the namespaces default to the ClusterName and ServiceName.
+  description: The dimensions for the metric associated with the scaling policy. A map of Dimension names to their values.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-dimension
+  type: Map of String to String
+scaling.step_scaling[X].when.metric:
+  default: unset
+  description: The name of the metric associated with the scaling policy.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-metricname
+  type: String
+scaling.step_scaling[X].when.namespace:
+  default: AWS/ECS
+  description: The namespace of the metric associated with the scaling policy.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-namespace
+    - https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/aws-services-cloudwatch-metrics.html
+  type: String
+scaling.step_scaling[X].when.statistic:
+  default: Average
+  description: The statistic for the metric associated with the scaling policy. Valid values are "Average", "Maximum", "Minimum", "SampleCount", or "Sum"
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-statistic
+  type: String
+scaling.step_scaling[X].when.threshold:
+  default: unset
+  description: The value to compare with the specified statistic.
+  references:
+    - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-threshold
+  type: Double
+yeet.priority_calculator_arn:
+  default: unset
+  description: The ARN of an AWS Lambda Function which returns a random unused ALB Listener Priority value. Can be omitted if ALBs are not being used or if rule priorities are statically set using <($.aws.application_load_balancers[X].listener_rules[X].priority)>
+  type: String
+yeet.timeout_func_arn:
+  default: unset
+  description: The ARN of an AWS Lambda Function which send a CloudFormation Signal once the Service resource has finished its create/update/cleanup CloudFormation operations. If this value isn't provided no CloudFormation Wait Condition will be created.
+  type: String

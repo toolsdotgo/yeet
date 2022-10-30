@@ -1,0 +1,159 @@
+aws:
+  ecs:
+    cluster: mycluster
+    task:
+      cpu: 256
+      execution_role: arn:aws:iam::123456789012:role/yeet-infra-ExecutionRole-ABCD1234
+      grace_period: "60"
+      ingress:
+        healthcheck:
+          allow_ingress_from:
+          - 0.0.0.0/0
+          description: health check requests from nlb using https
+          port: 4443
+          protocol: tcp
+        mtls:
+          allow_ingress_from:
+          - 0.0.0.0/0
+          description: requests from devices using mtls over https
+          port: 443
+          protocol: tcp
+      memory: 512
+      subnets:
+      - subnet-abc123
+      - subnet-def234
+      - subnet-cba345
+  iam:
+    role:
+      policy_statements:
+        cloudwatch:
+          action:
+          - logs:CreateLogStream
+          - logs:PutLogEvents
+          - cloudwatch:PutMetricData
+          - cloudwatch:GetMetricData
+          effect: allow
+          resource:
+          - '*'
+        kms:
+          action:
+          - kms:Decrypt
+          effect: allow
+          resource:
+          - arn:aws:kms:ap-southeast-2:1234567890:key/some-madeup-guid
+        s3:
+          action:
+          - s3:ListBucket
+          - s3:GetObject
+          - s3:ListObjects
+          effect: allow
+          resource:
+          - arn:aws:s3:::mybucket
+          - arn:aws:s3:::mybucket/myservice/*
+  network_load_balancers:
+    myapp:
+      access_logging:
+        prefix: myapp-logs
+      connection_draining_timeout: 300
+      container:
+        name: myapp
+        port: 443
+      cross_zone: true
+      dns:
+        myapp.example.com:
+          zone: example.com.
+      health_check:
+        healthy_threshold: 2
+        interval: 30
+        path: /health
+        port: 4443
+        protocol: HTTPS
+        unhealthy_threshold: 2
+      port: 443
+      protocol: TCP
+      proxy_protocol_v2: true
+      scheme: internet-facing
+      stickiness: source_ip
+      subnets:
+      - subnet-cde987
+      - subnet-efa765
+      - subnet-fab654
+  region: ap-southeast-2
+  vpc: vpc-fed456
+containers:
+  myapp:
+    depends_on:
+    - condition: SUCCESS
+      container: mysidecar
+    ecr:
+      account: 9876543210
+      region: ap-southeast-2
+      repository: myapp
+      tag: v50.0.0
+    environment:
+      FOO: bar
+    logs:
+      datetime: '%d/%b/%Y:%H:%M:%S'
+      group: myapp-logs
+      prefix: myapp
+    ports:
+    - tcp: 443
+    - udp: 2000
+    readonly: true
+    volumes_from:
+    - container: mysidecar
+      readonly: true
+    health_check:
+      command:
+        - 'CMD'
+        - 'echo hello'
+      interval: 60
+      retries: 2
+      start_period: 30
+      timeout: 2
+  mysidecar:
+    ecr:
+      account: 9876543210
+      region: ap-southeast-2
+      repository: mysidecar
+      tag: 12
+    environment:
+      MOREENV: somevalue
+    logs:
+      group: myapp-logs
+      prefix: myapp
+monitoring:
+  cloudwatch:
+    alarms:
+      highCPU:
+        description: Average CPU across all tasks is higher than expected
+        notify_on:
+        - alarm
+        - ok
+        period: 60
+        times: 5
+        treat_missing_data: missing
+        when:
+          comparison: GreaterThanThreshold
+          metric: CPUUtilization
+          namespace: AWS/ECS
+          statistic: Average
+          threshold: 80
+name: myapp
+scaling:
+  max: 3
+  min: 1
+  step_scaling:
+    highCPU:
+      adjustment: 1
+      adjustment_type: ChangeInCapacity
+      cooldown: 60
+      description: Scale up Service when CPU above 80% for 5 minutes
+      period: 60
+      times: 5
+      when:
+        comparison: GreaterThanOrEqualToThreshold
+        metric: CPUUtilization
+        namespace: AWS/ECS
+        statistic: Average
+        threshold: 80
