@@ -14,8 +14,8 @@ github.com/aws/aws-sdk-go-v2/internal/ini v1.3.28 h1:KeTxcGdNnQudb46oOl4d90f2I33
 github.com/aws/aws-sdk-go-v2/internal/ini v1.3.28/go.mod h1:yRZVr/iT0AqyHeep00SZ4YfBAKojXz08w3XMBscdi0c=
 github.com/aws/aws-sdk-go-v2/service/cloudformation v1.25.1 h1:WWP7rtNSBk+Wh4644ADuX5EksF6QFoCKNwj45fsBvRs=
 github.com/aws/aws-sdk-go-v2/service/cloudformation v1.25.1/go.mod h1:Apg7QSWLW1AGekfjYItJXemDl8GEeQYoUFlnw8WwBD8=
-github.com/aws/aws-sdk-go-v2/service/ecs v1.23.0 h1:U1C52Ja15znyDMd+J5t9URqHyGBTN0hPZt1UHlDFa7U=
-github.com/aws/aws-sdk-go-v2/service/ecs v1.23.0/go.mod h1:YXZ3cd8LDvvQytFpWjqbgdmHRAyJi4qbIT5dYdyhfeM=
+github.com/aws/aws-sdk-go-v2/service/ecs v1.23.1 h1:BGJWnCEGJv6qmFiQIghjl3Usf0TOjnz6jSykLeW5TyQ=
+github.com/aws/aws-sdk-go-v2/service/ecs v1.23.1/go.mod h1:YXZ3cd8LDvvQytFpWjqbgdmHRAyJi4qbIT5dYdyhfeM=
 github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.21 h1:5C6XgTViSb0bunmU57b3CT+MhxULqHH2721FVA+/kDM=
 github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.21/go.mod h1:lRToEJsn+DRA9lW4O9L9+/3hjTkUzlzyzHqn8MTds5k=
 github.com/aws/aws-sdk-go-v2/service/ssm v1.35.0 h1:QWCcOeLTrjvf7UdYIadzrhNH3PI6T9jXOV64Ez5YUgg=
