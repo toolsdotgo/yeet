@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/aws/aws-sdk-go-v2 v1.18.0
-	github.com/aws/aws-sdk-go-v2/config v1.18.24
+	github.com/aws/aws-sdk-go-v2/config v1.18.25
 	github.com/aws/aws-sdk-go-v2/service/cloudformation v1.27.4
 	github.com/aws/aws-sdk-go-v2/service/ecs v1.27.0
 	github.com/aws/aws-sdk-go-v2/service/ssm v1.36.4
@@ -14,7 +14,7 @@ require (
 require github.com/toolsdotgo/sfm/pkg/sfm v0.0.0-20221030033120-114cacb3e84e
 
 require (
-	github.com/aws/aws-sdk-go-v2/credentials v1.13.23 // indirect
+	github.com/aws/aws-sdk-go-v2/credentials v1.13.24 // indirect
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.13.3 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/configsources v1.1.33 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.4.27 // indirect
