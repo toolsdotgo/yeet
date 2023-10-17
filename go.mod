@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/aws/aws-sdk-go-v2 v1.21.2
-	github.com/aws/aws-sdk-go-v2/config v1.18.45
+	github.com/aws/aws-sdk-go-v2/config v1.19.0
 	github.com/aws/aws-sdk-go-v2/service/cloudformation v1.34.8
 	github.com/aws/aws-sdk-go-v2/service/ecs v1.30.3
 	github.com/aws/aws-sdk-go-v2/service/ssm v1.38.2
