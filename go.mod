@@ -3,7 +3,7 @@ module github.com/toolsdotgo/yeet
 go 1.19
 
 require (
-	github.com/aws/aws-sdk-go-v2 v1.23.3
+	github.com/aws/aws-sdk-go-v2 v1.23.4
 	github.com/aws/aws-sdk-go-v2/config v1.25.9
 	github.com/aws/aws-sdk-go-v2/service/cloudformation v1.41.0
 	github.com/aws/aws-sdk-go-v2/service/ecs v1.35.0
@@ -24,7 +24,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/sso v1.18.0 // indirect
 	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.21.0 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sts v1.26.0 // indirect
-	github.com/aws/smithy-go v1.18.0 // indirect
+	github.com/aws/smithy-go v1.18.1 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 )
