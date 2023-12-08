@@ -7,7 +7,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/config v1.25.12
 	github.com/aws/aws-sdk-go-v2/service/cloudformation v1.42.2
 	github.com/aws/aws-sdk-go-v2/service/ecs v1.35.4
-	github.com/aws/aws-sdk-go-v2/service/ssm v1.44.3
+	github.com/aws/aws-sdk-go-v2/service/ssm v1.44.4
 	gopkg.in/yaml.v2 v2.4.0
 )
 
